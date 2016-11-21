@@ -6,7 +6,7 @@ qwalk.spectralDecomposition = undefined
 qwalk.deltaTime = 0.01
 qwalk.walkStartIndex = -1;
 qwalk.timer = undefined
-qwalk.animationStatus = {isStopped:true,isRunning:false};
+qwalk.isStopped = false;
 
 function valToRed(value) {
 	if(value < 0 || value > 1) return '#00';
@@ -73,27 +73,29 @@ qwalk.startFromGraph = function()
 
 
 
-	//Set the animation status's flags appropriately
-	qwalk.setAnimationStatusToStartFlags();
+	
+	qwalk.setStartFlag();
+	
 	// Set time
 	qwalk.curTime = 0
+	
 	// Compute and cache the spectral decomposition
 	qwalk.spectralDecomposition = qtools.specdecomp(numeric.clone(qwalk.mat))
+	
 	// Run qwalk
 	qwalk.timer = setInterval(qwalk.loop, 25)
 
 };
 
-qwalk.setAnimationStatusToStartFlags = function()
+qwalk.setStartFlag = function()
 {
-	qwalk.animationStatus.isStopped = false;
-	qwalk.animationStatus.isRunning = true;
+	qwalk.isStopped = true;
 }
 
 qwalk.stop = function()
 {
 	
-		qwalk.animationStatus.isStopped = true;
+		qwalk.isStopped = false;
 	
 		clearInterval(qwalk.timer);
 	
