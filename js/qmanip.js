@@ -20,13 +20,13 @@ qmanip.nextNodeId = function() {
 
 qmanip.addNode = function() {
   var nodeId = qmanip.nextNodeId()
-  cy.add({data: {id: nodeId, bg: '#ffffff', fg: '#ffffff'}})
+  cy.add({data: {id: nodeId, bg: '#ffffff', fg: '#ffffff', prob: '0'}})
 }
 
 qmanip.addNodeWithPosition = function(posx,posy) {
   var nodeId = qmanip.nextNodeId()
   cy.add({
-    data: {id: nodeId, bg: '#ffffff', fg: '#ffffff'},
+    data: {id: nodeId, bg: '#ffffff', fg: '#ffffff', prob: '0'},
     position: {x: posx, y: posy}
   })
 }
@@ -37,11 +37,13 @@ qmanip.addEdge = function(id1,id2) {
   }
 }
 
-qmanip.setStartNode = function(id) {
+qmanip.setStartNode = function(node) {
+  cy.nodes()[qwalk.startIndex].style('border-color', '#000000')
+  node.style('border-color', qmanip.startNodeColor)
+  var id = node.id()
   cy.nodes().forEach(function(node, i) {
     if (node.id() === id) {
       qwalk.startIndex = i
-      node.style('border-color', qmanip.startNodeColor)
       return false  // stop the iteration
     }
   })

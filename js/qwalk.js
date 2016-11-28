@@ -5,7 +5,7 @@ qwalk.eigenvalues = undefined
 qwalk.eigenprojectors = undefined
 qwalk.deltaTime = 0.01
 qwalk.threshold = 0.95
-qwalk.startIndex = undefined
+qwalk.startIndex = 0
 qwalk.timer = undefined
 qwalk.visited = qmanip.startNodeColor
 
@@ -27,11 +27,10 @@ qwalk.rgbToHex = function (r, g, b) {
     return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
 }
 
-qwalk.startFromGraph = function() {
+qwalk.start = function() {
   // We need a startNode
-  if (qwalk.startIndex === undefined) {
-    throw new Error('No start position specified')
-  }
+  //TODO: when the start node is deleted, a new one should be automatically
+  // selected (if possible) and labeled appropriately. This does not happen yet.
 
   // Build adjacency matrix
   var N = cy.nodes().length
@@ -70,7 +69,7 @@ qwalk.loop = function() {
     var prob = ampl.mul(ampl.conj()).x[0][0]
     node.data('fg', qwalk.overlay('#ff0000', node.data('bg'), prob))
     node.data('prob', Math.round(prob*100).toString())
-    if (prob > qwalk.threshold) {
+    if (prob > qwalk.threshold && gui.showVisited) {
       node.data('bg', qwalk.visited)
     }
   })
@@ -79,8 +78,7 @@ qwalk.loop = function() {
 
 qwalk.stop = function() {
   clearInterval(qwalk.timer)
-  cy.nodes().forEach(function (node, i) {
-    node.data('fg', node.data('bg'))
-  })
-  cy.nodes().data('prob', 0)
+  cy.nodes().data('fg', '#ffffff')
+  cy.nodes().data('bg', '#ffffff')
+  cy.nodes().data('prob', '0')
 }
