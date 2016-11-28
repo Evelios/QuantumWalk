@@ -1,19 +1,8 @@
 //Main graph object
-var cy;
-var startNodeColor = '#009acd'
-
-function assert(condition, message) {
-  if (!condition) {
-    message = message || 'Assertion failed'
-    if (typeof Error !== 'undefined') {
-      throw new Error(message)
-    }
-    throw message  // Fallback
-  }
-}
+var cy
 
 String.prototype.format = function() {
-    var formatted = this;
+    var formatted = this
     for( var arg in arguments ) {
         formatted = formatted.replace("{" + arg + "}", arguments[arg])
     }
@@ -22,7 +11,7 @@ String.prototype.format = function() {
 
 function main() {
   //Init main graph object
-  console.log('Initializing cytoscape.');
+  console.log('Initializing cytoscape')
   cy = cytoscape({
     container: document.getElementById('hook'),
 
@@ -33,7 +22,8 @@ function main() {
           shape: 'ellipse',
           width: 20,
           height: 20,
-          'background-color': 'data(bg)',
+          'label': 'data(prob)',
+          'background-color': 'data(fg)',
           'border-color': '#000000',
           'border-width': 3
         }
@@ -49,16 +39,16 @@ function main() {
       }
     } else if (evt.cyTarget.isNode()) {
       if (graphState === addEdgeState_FirstClick) {
-        source_node = evt.cyTarget.id()
+        srcNode = evt.cyTarget.id()
         graphState = addEdgeState_SecondClick
       } else if (graphState === addEdgeState_SecondClick) {
-        qmanip.addEdge(source_node, evt.cyTarget.id())
+        qmanip.addEdge(srcNode, evt.cyTarget.id())
         graphState = neutralState
       } else if (graphState === deleteNodeState) {
-        qmanip.deleteNode(evt.cyTarget)
+        cy.remove(evt.cyTarget)
         graphState = neutralState
       } else if (graphState === setStartNodeState) {
-        qmanip.setStartNode(evt.cyTarget)
+        qmanip.setStartNodeById(evt.cyTarget.id())
         graphState = neutralState
       }
     } else if (evt.cyTarget.isEdge()) {
@@ -69,22 +59,16 @@ function main() {
     }
   })
 
-  //Create dummy graph and animate quantum walk
-  var A = graph.pathGraph(3)
-  graph.place_graph(graph.matrixToList(A));
-  qmanip.setStartNode(qmanip.getNode('n0'));
-  
-  cy.layout({name: 'circle', radius: 100, padding: 100});
-
-
   // Generate initial graph
-  //for (var i = 0; i < 3; i++) {
-  //  qmanip.addNode()
-  //}
-  //qmanip.addEdge('n0', 'n1')
-  //qmanip.addEdge('n1', 'n2')
+  for (var i = 0; i < 3; i++) {
+    qmanip.addNode()
+  }
+  qmanip.addEdge('n1', 'n2')
+  qmanip.addEdge('n2', 'n3')
+  qmanip.setStartNodeById('n1')
   // compute placements
- 
-  //cy.$('#n0').style('border-color', startNodeColor)
+  cy.layout({name: 'circle', radius: 100, padding: 100})
 
+  // Run tests on backend code
+  qtools.testAll(true)
 }

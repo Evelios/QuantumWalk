@@ -68,7 +68,6 @@ graph.listToMatrix = function(G) {
 };
 
 graph.place_graph = function(graph) {
-
   nodes = getVertices(graph);
 
   // add nodes to graph
@@ -86,7 +85,6 @@ graph.place_graph = function(graph) {
 
   // compute placements
   cy.layout({name: 'circle'});
-
 };
 
 // Create a path graph

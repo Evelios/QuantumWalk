@@ -7,7 +7,7 @@ addEdgeState_FirstClick = 4
 addEdgeState_SecondClick = 5
 setStartNodeState = 6
 
-source_node = undefined
+srcNode = undefined
 
 function openClose() {
   var button = document.getElementById('SideNavBtn')
@@ -30,10 +30,10 @@ function play() {
   if (document.getElementById("PlayButton").alt == "Play") {
     document.getElementById("PlayButton").alt = "Stop";
     document.getElementById("PlayButton").src = "StopButton.png";
-    qwalk.startFromGraph();
+    qwalk.startFromGraph()
   } else {
     document.getElementById("PlayButton").alt = "Play";
     document.getElementById("PlayButton").src = "PlayButton.png";
-    qwalk.stop();
+    qwalk.stop()
   }
 }
