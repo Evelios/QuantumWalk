@@ -23,7 +23,22 @@ function openClose() {
 }
 
 function setGraphState(state) {
-  graphState = state
+  var oldState = graphState;
+  var newState = state;
+  
+  graphState = newState;
+
+  /*
+  //Normalize text for the old state
+  if(oldState !== addEdgeState_SecondClick)
+  {
+	  var str = document.getElementById("msn"+oldState).innerHTML;
+	  
+	  //document.getElementById("msn"+oldState).innerHTML = ; //Fix me! I don't work!
+	  
+  }
+  */
+  
 }
 
 function play() {

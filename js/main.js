@@ -35,7 +35,6 @@ function main() {
     if (evt.cyTarget === cy) {
       if (graphState === addNodeState) {
         qmanip.addNodeWithPosition(evt.cyPosition.x, evt.cyPosition.y)
-        graphState = neutralState
       }
     } else if (evt.cyTarget.isNode()) {
       if (graphState === addEdgeState_FirstClick) {
@@ -43,18 +42,15 @@ function main() {
         graphState = addEdgeState_SecondClick
       } else if (graphState === addEdgeState_SecondClick) {
         qmanip.addEdge(srcNode, evt.cyTarget.id())
-        graphState = neutralState
+        graphState = addEdgeState_FirstClick
       } else if (graphState === deleteNodeState) {
         cy.remove(evt.cyTarget)
-        graphState = neutralState
       } else if (graphState === setStartNodeState) {
         qmanip.setStartNodeById(evt.cyTarget.id())
-        graphState = neutralState
       }
     } else if (evt.cyTarget.isEdge()) {
       if (graphState === deleteEdgeState) {
         cy.remove(evt.cyTarget)
-        graphState = neutralState
       }
     }
   })
