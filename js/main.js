@@ -16,6 +16,19 @@ gui.sourceNode = undefined
 
 gui.showVisited = true
 
+gui.closeMenu = function() {
+  if (document.getElementById('editBtn').getAttribute('state') === 'open') {
+    document.getElementById('topBtns').style.width = '100%'
+    document.getElementById('topBtns').style.marginLeft = '0px'
+    document.getElementById('cy').style.width = '100%'
+    document.getElementById('cy').style.marginLeft = '0px'
+    document.getElementById('editPanel').style.width = '0px'
+    document.getElementById('editBtn').setAttribute('state', 'closed')
+    cy.resize()
+    cy.fit()
+  }
+}
+
 $(document).ready(function() {
   $(window).resize(function() {
     cy.resize()
@@ -38,29 +51,25 @@ $(document).ready(function() {
       document.getElementById('cy').style.marginLeft = '119px'
       document.getElementById('editPanel').style.width = '119px'
       document.getElementById('editBtn').setAttribute('state', 'open')
+      cy.resize()
+      cy.fit()
     } else {
-      document.getElementById('topBtns').style.width = '100%'
-      document.getElementById('topBtns').style.marginLeft = '0px'
-      document.getElementById('cy').style.width = '100%'
-      document.getElementById('cy').style.marginLeft = '0px'
-      document.getElementById('editPanel').style.width = '0px'
-      document.getElementById('editBtn').setAttribute('state', 'closed')
+      gui.closeMenu()
     }
-    cy.resize()
-    cy.fit()
   })
 
   $('#playBtn').click(function(evt) {
     var playBtn = document.getElementById('playBtn')
-    if (playBtn.getAttribute('state') === 'play') {
+    if (playBtn.textContent === 'Play') {
+      gui.closeMenu()
+      $('#editBtn').prop('disabled', true)
       playBtn.setAttribute('class', 'btn btn-danger')
       playBtn.textContent = 'Stop'
-      playBtn.setAttribute('state', 'stop')
       qwalk.start()
     } else {
+      $('#editBtn').prop('disabled', false)
       playBtn.setAttribute('class', 'btn btn-success')
       playBtn.textContent = 'Play'
-      playBtn.setAttribute('state', 'play')
       qwalk.stop()
     }
   })
