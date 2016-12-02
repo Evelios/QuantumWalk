@@ -5,7 +5,7 @@ qwalk.eigenvalues = undefined
 qwalk.eigenprojectors = undefined
 qwalk.deltaTime = 0.01
 qwalk.threshold = 0.95
-qwalk.startIndex = undefined
+qwalk.startIndex = 0
 qwalk.timer = undefined
 qwalk.isStopped = false;
 qwalk.visited = qmanip.startNodeColor
@@ -38,17 +38,16 @@ qwalk.rgbToHex = function (r, g, b) {
     return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
 }
 
-qwalk.startFromGraph = function() {
+
+qwalk.start = function() {
   
-  //Reset overThresholdColor on all nodes
   cy.nodes().forEach(function(node,i){
-    node.data('overThresholdColor','#000000');
+	  node.data('overThresholdColor','#ffffff');
   });
   
   // We need a startNode
-  if (qwalk.startIndex === undefined) {
-    throw new Error('No start position specified')
-  }
+  //TODO: when the start node is deleted, a new one should be automatically
+  // selected (if possible) and labeled appropriately. This does not happen yet.
 
   // Build adjacency matrix
   var N = cy.nodes().length
@@ -90,7 +89,8 @@ qwalk.loop = function() {
     var prob = ampl.mul(ampl.conj()).x[0][0]
     node.data('fg', qwalk.overlay('#ff0000', node.data('overThresholdColor'), prob))
     node.data('prob', Math.round(prob*100).toString())
-    if (prob > qwalk.threshold) {
+
+    if (prob > qwalk.threshold && gui.showVisited) {
       node.data('overThresholdColor', qwalk.visited)
     }
   })
@@ -98,14 +98,17 @@ qwalk.loop = function() {
 }
 
 qwalk.stop = function() {
+  
   clearInterval(qwalk.timer);
   
   qwalk.setStopFlag();
   
-  cy.nodes().forEach(function (node, i) {
-    node.data('fg', node.data('overThresholdColor'))
+  qwalk.curTime = 0;
+
+  cy.nodes().forEach(function (node, i){
+    node.data('fg','#ffffff');
+	node.data('overThresholdColor','#ffffff');
 	node.data('prob',0);
   });
   
-  qwalk.curTime = 0;
 }
