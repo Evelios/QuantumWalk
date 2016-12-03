@@ -1,43 +1,96 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang='en'>
 
 <head>
+  <meta charset="utf-8"/>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'/>
+  <!-- Mobile Specific Metas -->
+  <meta name='viewport' content='width=device-width, initial-scale=1'/>
+  <!-- The above 3 meta tags *must* come first in the head;
+  any other head content must come *after* these tags.
+  Bootstrap requires this.  -->
   <title>Quantum Walk Visualization</title>
 
-  <meta charset="UTF-8"/>
 
+  <!-- Include libraries -->
+  <script src='lib\jquery.min.js' type='text/javascript'></script>
+  <script src='lib\numeric-1.2.6.min.js' type='text/javascript'></script>
+  <script src='lib\cytoscape.min.js' type='text/javascript'></script>
+  <script src='lib\bootstrap.min.js' type='text/javascript'></script>
+  <link rel="stylesheet" href='css/bootstrap.min.css'/>
+
+  <!-- Include code -->
+  <script src='combined.js' type='text/javascript'></script>
+  
   <!-- CSS Stylesheet -->
-  <link rel="stylesheet" type="text/css" href="main.css">
+  <style>
+  html, body {
+    height: 100%;
+    overflow-x: hidden;
+  }
 
-  <!-- Javascript Includes -->
+  #editPanel {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 0px;  /* Controlled by JavaScript */
+    transition: 0.5s;
+    overflow-x: hidden;
+  }
 
-  <!-- Library Code -->
-  <script src='lib_combined.js' type="text/javascript"></script>
+  #topBtns {
+    transition: margin-left 0.5s;
+    transition: 0.5s;
+    width: 100%;  /* Controlled by JavaScript */
+  }
 
-  <!-- Project Code -->
-  <script src='combined.js' type="text/javascript"></script>
-
+  #cy {
+    transition: margin-left 0.5s;
+    height: calc(100% - 34px);
+    width: 100%;  /* Controlled by JavaScript */
+  }
+  </style>
+  
 </head>
 
-<body onload='main()'>
 
-  <div id='hook'></div>
-
-  <div id="mySidenav" class="sidenav">
-    <a href="#" id="msn0" onclick="setGraphState(neutralState)">Selection Mode</a>
-    <a href="#" id="msn1" onclick="setGraphState(addNodeState)">Add Node</a>
-    <a href="#" id="msn2" onclick="setGraphState(deleteNodeState)">Delete Node</a>
-    <a href="#" id="msn4" onclick="setGraphState(addEdgeState_FirstClick)">Add Edge</a>
-    <a href="#" id="msn3" onclick="setGraphState(deleteEdgeState)">Delete Edge</a>
-    <a href="#" id="msn6" onclick="setGraphState(setStartNodeState)">Set Start Node</a>
+<body>
+  <div id='editPanel'>
+    <div class='btn-group-vertical' id='graphEdit' data-toggle='buttons'>
+      <label class='btn btn-default active' state='select'>
+        <input type='radio' autocomplete='off' clicked>Select Mode
+      </label>
+      <label class='btn btn-default' state='setStartNode'>
+        <input type='radio' autocomplete='off'>Set Start Node
+      </label>
+      <label class='btn btn-default' state='addNode'>
+        <input type='radio' autocomplete='off'>Add Node
+      </label>
+      <label class='btn btn-default' state='selectSource'>
+        <input type='radio' autocomplete='off'>Add Edge
+      </label>
+      <label class='btn btn-default' state='deleteNode'>
+        <input type='radio' autocomplete='off'>Delete Node
+      </label>
+      <label class='btn btn-default' state='deleteEdge'>
+        <input type='radio' autocomplete='off'>Delete Edge
+      </label>
+    </div>
+    <div>
+      <button class='btn btn-default btn-block active' type='button'
+      id='visitBtn' data-toggle='button'>Show Visited</button>
+    </div>
   </div>
 
-  <input id="SideNavBtn" class="openButton" type="image" alt="Open"
-  src="SideNavButton.png" onclick="openClose()">
-  <!--&#9776; -->
+  <div id='topBtns'>
+    <button id='editBtn' class='btn btn-info' type='button'
+    state='closed'>Edit Graph</button>
+    <button id='playBtn' class='btn btn-success' type='button'>Play</button>
+  </div>
 
-  <input id="PlayButton" class="playButton" type="image" alt="Play"
-  src="PlayButton.png" onclick="play()">
+  <div id='cy'></div>
+  
 </body>
 
 </html>
