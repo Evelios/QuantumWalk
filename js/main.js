@@ -24,6 +24,12 @@ gui.closeMenu = function() {
     document.getElementById('cy').style.marginLeft = '0px'
     document.getElementById('editPanel').style.width = '0px'
     document.getElementById('editBtn').setAttribute('state', 'closed')
+    var children = document.getElementById('stateGroup').children;
+    children[0].setAttribute('class', 'btn btn-default active')
+    for (var i = 1; i < children.length; i++) {
+      children[i].setAttribute('class', 'btn btn-default')
+    }
+    gui.state = gui.select
     cy.resize()
     cy.fit()
   }
@@ -35,7 +41,7 @@ $(document).ready(function() {
     cy.fit()
   })
 
-  $('#graphEdit').click(function(evt) {
+  $('#stateGroup').click(function(evt) {
     gui.state = gui[evt.target.getAttribute('state')]
   })
 
@@ -77,7 +83,6 @@ $(document).ready(function() {
 
   cy = cytoscape({
     container: document.getElementById('cy'),
-    userZoomingEnabled: false,
     style: [{
       selector: 'node',
       style: {

@@ -37,17 +37,13 @@ qmanip.addEdge = function(id1,id2) {
   }
 }
 
-qmanip.setStartNode = function(node) {
-  cy.nodes()[qwalk.startIndex].style('border-color', '#000000')
-  node.style('border-color', qmanip.startNodeColor)
-  var id = node.id()
+qmanip.setStartNode = function(startNode) {
   cy.nodes().forEach(function(node, i) {
-    if (node.id() === id) {
+    if (node.id() === startNode.id()) {
       qwalk.startIndex = i
-      return false  // stop the iteration
+      node.style('border-color', qmanip.startNodeColor)
+    } else {
+      node.style('border-color', '#000000');
     }
-	else{
-	  node.style('border-color', '#000000');
-	}
   })
 }
