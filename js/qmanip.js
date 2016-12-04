@@ -20,13 +20,15 @@ qmanip.nextNodeId = function() {
 
 qmanip.addNode = function() {
   var nodeId = qmanip.nextNodeId()
-  cy.add({data: {id: nodeId, bg: '#ffffff', fg: '#ffffff', prob: '0'}})
+  var prob = gui.getShowProb() ? '0' : ''
+  cy.add({data: {id: nodeId, bg: '#ffffff', fg: '#ffffff', prob: prob}})
 }
 
 qmanip.addNodeWithPosition = function(posx,posy) {
   var nodeId = qmanip.nextNodeId()
+  var prob = gui.getShowProb() ? '0' : ''
   cy.add({
-    data: {id: nodeId, bg: '#ffffff', fg: '#ffffff', prob: '0'},
+    data: {id: nodeId, bg: '#ffffff', fg: '#ffffff', prob: prob},
     position: {x: posx, y: posy}
   })
 }

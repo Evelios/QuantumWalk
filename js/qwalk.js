@@ -7,7 +7,6 @@ qwalk.deltaTime = 0.01
 qwalk.threshold = 0.95
 qwalk.startIndex = 0
 qwalk.timer = undefined
-qwalk.isStopped = false;
 qwalk.visited = qmanip.startNodeColor
 
 qwalk.overlay = function(topColor, bottomColor, alpha) {
@@ -24,27 +23,12 @@ qwalk.hexToRgb = function(hex) {
   return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255]
 }
 
-qwalk.unsetStopFlag = function()
-{
-	qwalk.isStopped = false;
-}
-
-qwalk.setStopFlag = function()
-{
-	qwalk.isStopped = true;
-}
-
 qwalk.rgbToHex = function (r, g, b) {
-    return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
+  return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
 }
 
 
 qwalk.start = function() {
-  
-  cy.nodes().forEach(function(node,i){
-	  node.data('overThresholdColor','#ffffff');
-  });
-  
   // We need a startNode
   //TODO: when the start node is deleted, a new one should be automatically
   // selected (if possible) and labeled appropriately. This does not happen yet.
@@ -54,9 +38,6 @@ qwalk.start = function() {
   qwalk.mat = numeric.rep([N, N], 0)
   for (var i = 0; i < N; i++) {
     for (var j = 0; j < N; j++) {
-      /* if (i == j) {
-        continue
-      } */
       var edges = qmanip.getEdges(cy.nodes()[i].id(), cy.nodes()[j].id())
       qwalk.mat[i][j] = edges.length > 0 ? 1 : 0
     }
@@ -64,9 +45,6 @@ qwalk.start = function() {
 
   // Set time
   qwalk.curTime = 0
-  //Set start flag
-  qwalk.unsetStopFlag();
-  
   // Compute and cache the spectral decomposition
   var B = qtools.specdecomp(qwalk.mat)
   qwalk.eigenvalues = B[0].map(function(x) {return numeric.t([x], [0])})
@@ -87,28 +65,25 @@ qwalk.loop = function() {
     // where n = qwalk.startIndex
     var ampl = U.getBlock([i, qwalk.startIndex], [i, qwalk.startIndex])
     var prob = ampl.mul(ampl.conj()).x[0][0]
-    node.data('fg', qwalk.overlay('#ff0000', node.data('overThresholdColor'), prob))
-    node.data('prob', Math.round(prob*100).toString())
-
-    if (prob > qwalk.threshold && gui.showVisited) {
-      node.data('overThresholdColor', qwalk.visited)
+    node.data('fg', qwalk.overlay('#ff0000', node.data('bg'), prob))
+    if (gui.getShowProb()) {
+      node.data('prob', Math.round(prob*100).toString())
+    }
+    if (prob > qwalk.threshold && gui.getShowVisited()) {
+      node.data('bg', qwalk.visited)
     }
   })
   qwalk.curTime += qwalk.deltaTime
 }
 
 qwalk.stop = function() {
-  
   clearInterval(qwalk.timer);
-  
-  qwalk.setStopFlag();
-  
   qwalk.curTime = 0;
-
   cy.nodes().forEach(function (node, i){
-    node.data('fg','#ffffff');
-	node.data('overThresholdColor','#ffffff');
-	node.data('prob',0);
-  });
-  
+    node.data('fg','#ffffff')
+    node.data('bg','#ffffff')
+    if (gui.getShowProb()) {
+      node.data('prob','0')
+    }
+  })
 }

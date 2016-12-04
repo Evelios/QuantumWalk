@@ -20,7 +20,11 @@
   <link rel='stylesheet' href='css/bootstrap.min.css'/>
 
   <!-- Include code -->
-  <script src='combined.js' type='text/javascript'></script>
+  <script src='js/compRealEigSys.js' type='text/javascript'></script>
+  <script src='js/main.js' type='text/javascript'></script>
+  <script src='js/qmanip.js' type='text/javascript'></script>
+  <script src='js/qtools.js' type='text/javascript'></script>
+  <script src='js/qwalk.js' type='text/javascript'></script>
 
   <!-- CSS Stylesheet -->
   <style>
@@ -57,7 +61,7 @@
 
 <body>
   <div id='editPanel'>
-    <div class='btn-group-vertical' id='stateGroup' data-toggle='buttons'>
+    <div class='btn-group-vertical btn-block' id='stateGroup' data-toggle='buttons'>
       <label class='btn btn-default active' state='select'>
         <input type='radio' autocomplete='off'>Select Mode
       </label>
@@ -77,16 +81,15 @@
         <input type='radio' autocomplete='off'>Delete Edge
       </label>
     </div>
-    <div>
-      <button class='btn btn-default btn-block active' type='button'
-      id='visitBtn' data-toggle='button'>Show Visited</button>
+    <div class='btn-group-vertical btn-block'>
+      <button class='btn btn-default' type='button' data-toggle='button' autocomplete='off' id='visitBtn'>Show Visited</button>
+      <button class='btn btn-default' type='button' data-toggle='button' autocomplete='off' id='probBtn'>Show Probabilities</button>
     </div>
   </div>
 
   <div id='topBtns'>
-    <button id='editBtn' class='btn btn-info' type='button'
-    state='closed' disabled='false'>Edit Graph</button>
-    <button id='playBtn' class='btn btn-success' type='button'>Play</button>
+    <button class='btn btn-info' type='button' state='closed' autocomplete='off' id='editBtn'>Edit Graph</button>
+    <button class='btn btn-success' type='button' autocomplete='off' id='playBtn'>Play</button>
   </div>
 
   <div id='cy'></div>

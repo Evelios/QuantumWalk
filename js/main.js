@@ -14,7 +14,8 @@ gui.state = gui.select
 
 gui.sourceNode = undefined
 
-gui.showVisited = true
+gui.leftMargin = '142px'
+gui.bodyWidth = 'calc(100% - ' + gui.leftMargin + ')'
 
 gui.closeMenu = function() {
   if (document.getElementById('editBtn').getAttribute('state') === 'open') {
@@ -24,15 +25,23 @@ gui.closeMenu = function() {
     document.getElementById('cy').style.marginLeft = '0px'
     document.getElementById('editPanel').style.width = '0px'
     document.getElementById('editBtn').setAttribute('state', 'closed')
-    var children = document.getElementById('stateGroup').children;
-    children[0].setAttribute('class', 'btn btn-default active')
+    var children = $('#stateGroup').children()
+    $(children[0]).addClass('active')
     for (var i = 1; i < children.length; i++) {
-      children[i].setAttribute('class', 'btn btn-default')
+      $(children[i]).removeClass('active')
     }
     gui.state = gui.select
     cy.resize()
     cy.fit()
   }
+}
+
+gui.getShowVisited = function() {
+  return $('#visitBtn').hasClass('active')
+}
+
+gui.getShowProb = function() {
+  return $('#probBtn').hasClass('active')
 }
 
 $(document).ready(function() {
@@ -45,18 +54,21 @@ $(document).ready(function() {
     gui.state = gui[evt.target.getAttribute('state')]
   })
 
-
-  $('#visitBtn').click(function(evt) {
-    gui.showVisited = !gui.showVisited
+  $('#probBtn').click(function(evt) {
+    if ($('#probBtn').hasClass('active')) {
+      cy.nodes().data('prob', '')
+    } else {
+      cy.nodes().data('prob', '0')
+    }
   })
 
   $('#editBtn').click(function(evt) {
     if (document.getElementById('editBtn').getAttribute('state') === 'closed') {
-      document.getElementById('topBtns').style.width = 'calc(100% - 119px)'
-      document.getElementById('topBtns').style.marginLeft = '119px'
-      document.getElementById('cy').style.width = 'calc(100% - 119px)'
-      document.getElementById('cy').style.marginLeft = '119px'
-      document.getElementById('editPanel').style.width = '119px'
+      document.getElementById('topBtns').style.width = gui.bodyWidth
+      document.getElementById('topBtns').style.marginLeft = gui.leftMargin
+      document.getElementById('cy').style.width = gui.bodyWidth
+      document.getElementById('cy').style.marginLeft = gui.leftMargin
+      document.getElementById('editPanel').style.width = gui.leftMargin
       document.getElementById('editBtn').setAttribute('state', 'open')
       cy.resize()
       cy.fit()
@@ -132,5 +144,5 @@ $(document).ready(function() {
   cy.layout({name: 'circle', radius: 100, padding: 0})
 
   // Run tests on backend code
-  qtools.testAll(true)
+  //qtools.testAll(true)
 })
