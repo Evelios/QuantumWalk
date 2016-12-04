@@ -20,15 +20,27 @@ qmanip.nextNodeId = function() {
 
 qmanip.addNode = function() {
   var nodeId = qmanip.nextNodeId()
-  cy.add({data: {id: nodeId, bg: '#ffffff', fg: '#ffffff', prob: '0'}})
+  cy.add({data: {id: nodeId, overThresholdColor: '#ffffff', fg: '#ffffff', prob: '0'}})
+}
+
+qmanip.addNodeWithId = function(nId) {
+  cy.add({
+  	data: {id: nId,overThresholdColor: '#ffffff',fg: '#ffffff', prob:'0'}
+  });
 }
 
 qmanip.addNodeWithPosition = function(posx,posy) {
   var nodeId = qmanip.nextNodeId()
   cy.add({
-    data: {id: nodeId, bg: '#ffffff', fg: '#ffffff', prob: '0'},
+    data: {id: nodeId, overThresholdColor: '#ffffff', fg: '#ffffff', prob: '0'},
     position: {x: posx, y: posy}
   })
+}
+
+qmanip.addNodeWithIdAndPosition = function(nId,posx,posy){
+  cy.add({
+    data:{id:nId, overThresholdColor: '#ffffff', fg: '#ffffff', prob: '0'}
+  });
 }
 
 qmanip.addEdge = function(id1,id2) {

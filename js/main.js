@@ -74,6 +74,10 @@ $(document).ready(function() {
       qwalk.stop()
     }
   })
+  
+  $('#importBtn').change(function(evt) {
+    importGraphFromSGF(evt.target.files[0]);
+  })
 
   cy = cytoscape({
     container: document.getElementById('cy'),
@@ -129,3 +133,5 @@ $(document).ready(function() {
   // Run tests on backend code
   qtools.testAll(true)
 })
+
+

@@ -1,0 +1,165 @@
+
+/* TGFP is Trivial Graph Format with Position
+This adds the ability to specify position on nodes
+
+So a node looks like...
+
+(num) (lbl) @ (posx) (posy)
+or
+(num) (lbl)
+or
+(num)
+
+*/
+
+/* Note that the import doesn't work yet. We will get it working in a later revision */
+
+
+function importGraphFromTGFP(file)
+{
+	
+	//Clear the graph
+	cy.elements().remove();
+	
+	var reader = new FileReader();
+	reader.onload = function(progressEvent)
+	{
+    try{
+      var textOfFile = this.result;
+      var linesOfFile = textOfFile.split('\n');
+      
+      var isReadingEdges = false;
+      var needsLayout = false; //This is true if one of the nodes doesn't have a position attached
+      
+      for(var i=0;i<linesOfFile.length;++i)
+      {
+        
+        var curLine = linesOfFile[i];
+        var partsOfLine = curLine.split(' ');
+        
+        if(curLine.trim() === '')
+          continue;
+        
+        if(!isReadingEdges)
+        {
+
+          var nodeNumber;
+          var hasPosition = false;
+          var encounteredHash = false;
+          var encounteredAtSign = false; //Whether there is a position
+          var encounteredNumber = false;
+          
+          var posx;
+          var posy;
+      
+          for(var j=0;j<partsOfLine.length;++j)
+          {
+            var curPart = partsOfLine[j].trim();
+            
+            if(curPart === "")
+              continue;
+            else if(curPart === "#")
+            {
+              encounteredHash = true;
+              break;
+            }
+            else if(curPart === "@")
+            {
+              encounteredAtSign = true;
+            }
+            else
+            {
+              if(!encounteredAtSign)
+              {
+                if(!encounteredNumber)
+                {
+                  encounteredNumber = true;
+                  nodeNumber = curPart;
+                }
+              }
+              else
+              {
+                if(posx === undefined)
+                  posx = parseFloat(curPart);
+                else if(posy === undefined)
+                  posy = parseFloat(curPart);
+              }
+            }
+            
+          }
+          
+          if(encounteredHash)
+            isReadingEdges = true;
+          else if(encounteredAtSign && posy === undefined)
+          {
+            var e = new Error('Line '+ (i+1) +': Position has two parts');
+            throw e;
+          }
+          else if(!encounteredNumber && encounteredAtSign)
+          {
+            var e = new Error('Line '+ (i+1) +': Number id not found');
+            throw e;
+          }
+          else
+          {
+            if(!encounteredAtSign)
+            {
+              needsLayout = true;
+              qmanip.addNodeWithId('n'+nodeNumber);
+            }
+            else
+            {
+              qmanip.addNodeWithIdAndPosition('n'+nodeNumber,posx,posy)
+            }
+          }
+          
+        }
+        else //isReadingEdges is true
+        {
+          var sourceNumber;
+          var targetNumber;
+          
+          for(var j=0;j<partsOfLine.length;++j)
+          {
+            var curPart = partsOfLine[j].trim();
+            
+            if(curPart === '')
+              continue;
+            else
+            {
+              if(sourceNumber === undefined)
+                sourceNumber = curPart;
+              else if(targetNumber === undefined)
+                targetNumber = curPart;
+            }
+          }
+          
+          if(targetNumber === undefined)
+          {
+            var e = new Error('Line '+ (i+1) +': Edges must have a source and a target');
+            throw e;
+          }
+          else
+          {
+            qmanip.addEdge('n'+sourceNumber,'n'+targetNumber);
+          }
+          
+        }
+        
+      }
+      
+      if(needsLayout)
+        cy.layout({name:'circle',radius:100,padding:0});
+      
+    } catch(e){
+      console.log(''+e);
+    }
+	};
+	
+	reader.readAsText(file);
+}
+
+function exportGraphToTGFP()
+{
+  
+}
