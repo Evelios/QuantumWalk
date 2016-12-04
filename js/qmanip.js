@@ -53,13 +53,22 @@ qmanip.setStartNode = function(node) {
   cy.nodes()[qwalk.startIndex].style('border-color', '#000000')
   node.style('border-color', qmanip.startNodeColor)
   var id = node.id()
+  
+  //Set qwalk.startIndex
   cy.nodes().forEach(function(node, i) {
     if (node.id() === id) {
       qwalk.startIndex = i
       return false  // stop the iteration
     }
-	else{
-	  node.style('border-color', '#000000');
-	}
-  })
+    else{
+      node.style('border-color', '#000000');
+    }
+  });
+  
+  //Set isStart (this is a piece of data in the nodes)
+  cy.nodes().forEach(function(node,i){
+    node.data('isStart',false);
+  });
+  node.data('isStart',true);
+  
 }

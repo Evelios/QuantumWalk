@@ -37,6 +37,10 @@ function importGraphFromSGF(file)
     var textOfFile = this.result;
     var linesOfFile = textOfFile.split('\n');
     
+    //Get rid of newlines before
+    while(linesOfFile[0].trim() === '')
+      linesOfFile = linesOfFile.slice(1);
+    
     if(linesOfFile.length < 2)
     {
       var e = new Error('The file must contain at least the number of nodes and a start node');
@@ -60,7 +64,15 @@ function importGraphFromSGF(file)
       for(var i=2;i<linesOfFile.length;++i)
       {
         var curLine = linesOfFile[i];
+        
+        //Ignore if just whitespace
+        if(curLine.trim() === '')
+          continue;
+        
         var partsOfLine = curLine.split(' ');
+        
+        if(partsOfLine.length < 2)
+          throw new Error('Line '+(i+1)+': Edge doesn\'t have enough arguments');
         
         var sourceNodeNumber = parseInt(partsOfLine[0].trim());
         var targetNodeNumber = parseInt(partsOfLine[1].trim());
@@ -97,5 +109,52 @@ function importGraphFromSGF(file)
   };
   
   reader.readAsText(file);
+  
+}
+
+
+function exportGraphToSGF()
+{
+  //Give each node a number id
+  cy.nodes().forEach(function(node,i){
+    node.data('nodeNumber',i+1);
+  });
+  
+  //Start filetext
+  var filetext = '';
+  
+  //Put number of nodes into file text
+  filetext = filetext + cy.nodes().length;
+  
+  //Find index for the start node
+  var startNodeNumber = -1; 
+  cy.nodes().forEach(function(node,i){
+    if(node.data('isStart') === true)
+      startNodeNumber = node.data('nodeNumber');
+  });
+  
+  if(startNodeNumber === -1)
+    throw new Error('The graph doesn\'t have a start node');
+  
+  //Put start node number into file text
+  filetext = filetext + '\n' + startNodeNumber;
+  
+  //Put edges to file
+  cy.edges().forEach(function(edge,i){
+    filetext = filetext + '\n' + edge.source().data('nodeNumber') + ' ' + edge.target().data('nodeNumber');
+  });
+  
+  //Bring up download for file 
+  //I got this code from StackOverflow (http://stackoverflow.com/questions/3665115/create-a-file-in-memory-for-user-to-download-not-through-server)
+  var downloadElement = document.createElement('a');
+  downloadElement.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(filetext));
+  downloadElement.setAttribute('download', 'yourgraph.sgf');
+
+  downloadElement.style.display = 'none';
+  document.body.appendChild(downloadElement);
+
+  downloadElement.click();
+
+  document.body.removeChild(downloadElement);
   
 }

@@ -66,18 +66,30 @@ $(document).ready(function() {
       $('#editBtn').prop('disabled', true)
       playBtn.setAttribute('class', 'btn btn-danger')
       playBtn.textContent = 'Stop'
+      $('#importBtn').prop('disabled',true);
+      $('#exportBtn').prop('disabled',true);
       qwalk.start()
     } else {
       $('#editBtn').prop('disabled', false)
       playBtn.setAttribute('class', 'btn btn-success')
       playBtn.textContent = 'Play'
+      $('#importBtn').prop('disabled',false);
+      $('#exportBtn').prop('disabled',false);
       qwalk.stop()
     }
   })
   
-  $('#importBtn').change(function(evt) {
+  $('#importBtn').click(function(evt){
+    document.getElementById('importBtnPicker').click()
+  })
+  
+  $('#importBtnPicker').change(function(evt) {
     importGraphFromSGF(evt.target.files[0]);
   })
+  
+  $('#exportBtn').click(function(evt){
+    exportGraphToSGF();
+  });
 
   cy = cytoscape({
     container: document.getElementById('cy'),
