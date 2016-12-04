@@ -1,0 +1,46 @@
+
+
+SGF format looks like...
+
+(num of nodes)
+(start node)
+(edge)
+(edge)
+(and so on)
+
+
+
+Example:
+
+4
+1
+1 2
+2 3
+3 4
+
+Note that any extra information at the end of the line is ignored
+So you can do...
+
+4 Num of nodes
+1 Start Node
+1 2 Edge 1
+2 3 Edge 2
+3 4 Edge that looks like waffles
+
+It also ignores lines only containing whitespace
+
+So you can do...
+\t
+\t\t\t
+4
+
+1
+
+1 2
+
+
+
+
+2 3
+3 4
+

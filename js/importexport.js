@@ -38,8 +38,19 @@ function importGraphFromSGF(file)
     var linesOfFile = textOfFile.split('\n');
     
     //Get rid of newlines before
-    while(linesOfFile[0].trim() === '')
-      linesOfFile = linesOfFile.slice(1);
+    try{
+      while(linesOfFile[0].trim() === '')
+        linesOfFile = linesOfFile.slice(1);
+      
+      while(linesOfFile[1].trim() === '')
+        linesOfFile.splice(1,1);
+    }
+    catch(e) //This happens if the number of lines, after killing whitespace, is less than 2
+    {
+      throw new Error('The file must contain at least the number of nodes and a start node');
+    }
+    
+    //Get rid of newlines after the number of nodes
     
     if(linesOfFile.length < 2)
     {
