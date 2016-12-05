@@ -4,7 +4,7 @@ qwalk.mat = undefined
 qwalk.eigenvalues = undefined
 qwalk.eigenprojectors = undefined
 qwalk.deltaTime = 0.01
-qwalk.threshold = 0.95
+qwalk.threshold = 0.80
 qwalk.startIndex = 0
 qwalk.timer = undefined
 qwalk.visited = qmanip.startNodeColor
@@ -54,7 +54,7 @@ qwalk.start = function() {
   // Verify that spectral decomposition was computed correctly
   qtools.testSpectralDecomposition(qwalk.mat, B, false)
   // Run qwalk
-  qwalk.timer = setInterval(qwalk.loop, 30)
+  qwalk.timer = setInterval(qwalk.loop, 40)
 }
 
 qwalk.loop = function() {

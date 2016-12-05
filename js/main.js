@@ -19,11 +19,9 @@ gui.bodyWidth = 'calc(100% - ' + gui.leftMargin + ')'
 
 gui.closeMenu = function() {
   if (document.getElementById('editBtn').getAttribute('state') === 'open') {
-    document.getElementById('topBtns').style.width = '100%'
-    document.getElementById('topBtns').style.marginLeft = '0px'
-    document.getElementById('cy').style.width = '100%'
-    document.getElementById('cy').style.marginLeft = '0px'
-    document.getElementById('editPanel').style.width = '0px'
+    $('#topBtns').css({'width': '100%', 'margin-left': '0px'})
+    $('#cy').css({'width': '100%', 'margin-left': '0px'})
+    $('#editPanel').css('width', '0px')
     document.getElementById('editBtn').setAttribute('state', 'closed')
     var children = $('#stateGroup').children()
     $(children[0]).addClass('active')
@@ -64,11 +62,9 @@ $(document).ready(function() {
 
   $('#editBtn').click(function(evt) {
     if (document.getElementById('editBtn').getAttribute('state') === 'closed') {
-      document.getElementById('topBtns').style.width = gui.bodyWidth
-      document.getElementById('topBtns').style.marginLeft = gui.leftMargin
-      document.getElementById('cy').style.width = gui.bodyWidth
-      document.getElementById('cy').style.marginLeft = gui.leftMargin
-      document.getElementById('editPanel').style.width = gui.leftMargin
+      $('#topBtns').css({'width': gui.bodyWidth, 'margin-left': gui.leftMargin})
+      $('#cy').css({'width': gui.bodyWidth, 'margin-left': gui.leftMargin})
+      $('#editPanel').css('width', gui.leftMargin)
       document.getElementById('editBtn').setAttribute('state', 'open')
       cy.resize()
       cy.fit()
@@ -92,6 +88,24 @@ $(document).ready(function() {
       qwalk.stop()
     }
   })
+
+  $('#visitedSlider').slider({
+    min: 0,
+    max: 100,
+    value: 80
+  }).on('slide', function(evt) {
+    qwalk.threshold = evt.value / 100
+  })
+  $('#visitedSlider').css('width', '100%')
+
+  $('#speedSlider').slider({
+    min: 1,
+    max: 10,
+    value: 1
+  }).on('slide', function(evt) {
+    qwalk.deltaTime = evt.value / 100
+  })
+  $('#speedSlider').css('width', '100%')
 
   cy = cytoscape({
     container: document.getElementById('cy'),
