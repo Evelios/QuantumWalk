@@ -24,6 +24,11 @@ qmanip.addNode = function() {
   cy.add({data: {id: nodeId, bg: '#ffffff', fg: '#ffffff', prob: prob}})
 }
 
+qmanip.addNodeWithId = function(id) {
+  var prob = gui.getShowProb() ? '0' : ''
+  cy.add({data: {id: id, bg: '#ffffff',fg: '#ffffff', prob: prob}})
+}
+
 qmanip.addNodeWithPosition = function(posx,posy) {
   var nodeId = qmanip.nextNodeId()
   var prob = gui.getShowProb() ? '0' : ''
