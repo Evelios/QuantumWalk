@@ -277,7 +277,13 @@ $(document).ready(function() {
       qmanip.addEdge(gui.sourceNode, evt.cyTarget.id())
       gui.state = gui.selectSource
     } else if (gui.state === gui.deleteNode) {
-      cy.remove(evt.cyTarget)
+      if (evt.cyTarget.id() == cy.nodes()[qwalk.startIndex].id()) {
+        cy.remove(evt.cyTarget)
+        qwalk.startIndex = 0
+        qmanip.setStartNode(cy.nodes()[0])
+      } else {
+        cy.remove(evt.cyTarget)
+      }
     } else if (gui.state === gui.setStartNode) {
       qmanip.setStartNode(evt.cyTarget)
     }
